@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.colors import ListedColormap
 from enum import Enum
+import networkx as nx
+
 
 class GossipState(Enum):
     """Status agen dalam penyebaran gosip"""
@@ -143,7 +145,7 @@ class GossipModel(mesa.Model):
         self.create_agents()
         
         # Buat koneksi sosial setelah semua agen dibuat
-        self.create_social_network()
+        self.create_social_network(network_type='small-world')  # 'small-world': skala lingkungan kecil atau 'scale-free': luas dengan media
         
         # Collect data awal (hari ke-0)
         self.datacollector.collect(self)
@@ -172,11 +174,26 @@ class GossipModel(mesa.Model):
         for agent in initial_spreaders:
             agent.state = GossipState.SPREADER
     
-    def create_social_network(self):
-        """Membuat jaringan sosial untuk semua agen"""
-        for agent in self.schedule.agents:
-            if agent.state != GossipState.RESISTANT:  # Resistant agents have fewer connections
-                agent.create_social_connections()
+    def create_social_network(self, network_type='small-world'):
+        """Membuat jaringan sosial berdasarkan model jaringan (small-world / scale-free)"""
+        num_agents = len(self.schedule.agents)
+
+        # Bangun jaringan sosial
+        if network_type == 'small-world':
+            # Small-world: k=6 tetangga, p=0.1 rewiring
+            G = nx.watts_strogatz_graph(n=num_agents, k=6, p=0.1)
+        elif network_type == 'scale-free':
+            # Scale-free: setiap node baru hubungkan ke 3 existing nodes
+            G = nx.barabasi_albert_graph(n=num_agents, m=3)
+        else:
+            raise ValueError("Tipe jaringan tidak dikenal: gunakan 'small-world' atau 'scale-free'.")
+
+        # Hubungkan node (agen) ke koneksi sosial berdasarkan edge di G
+        agent_list = list(self.schedule.agents)
+        for i, agent in enumerate(agent_list):
+            neighbors_idx = list(G.neighbors(i))
+            agent.social_connections = [agent_list[j] for j in neighbors_idx if agent_list[j] != agent]
+
     
     def step(self):
         """Satu langkah simulasi"""
