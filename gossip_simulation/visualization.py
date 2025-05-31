@@ -11,7 +11,7 @@ from .network import SocialNetworkBuilder
 if TYPE_CHECKING:
     from .model import GossipModel
 
-
+np.random.seed(0)
 class EnhancedGossipVisualization:
     """Enhanced visualization for gossip simulation"""
     

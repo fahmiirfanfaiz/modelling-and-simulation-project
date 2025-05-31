@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from .agent import PersonAgent
     from .config import SimulationConfig
 
-
+np.random.seed(0)
 class SocialNetworkBuilder:
     """Builder class for creating social networks"""
     

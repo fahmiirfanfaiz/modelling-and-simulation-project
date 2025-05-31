@@ -8,6 +8,7 @@ from .states import GossipState
 if TYPE_CHECKING:
     from .model import GossipModel
 
+np.random.seed(0)
 
 class PersonAgent(mesa.Agent):
     """Agen individu dalam simulasi penyebaran gosip"""
