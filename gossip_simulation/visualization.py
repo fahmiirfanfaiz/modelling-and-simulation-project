@@ -116,19 +116,19 @@ class EnhancedGossipVisualization:
     def _get_population_counts(self) -> dict:
         """Get current population counts for each state"""
         counts = {
-            'Ignorant': 0,
+            'Uninformed': 0,
             'Spreader': 0, 
-            'Stifler': 0,
+            'Dormant': 0,
             'Resistant': 0
         }
         
         for agent in self.model.schedule.agents:
-            if agent.state == GossipState.IGNORANT:
-                counts['Ignorant'] += 1
+            if agent.state == GossipState.UNINFORMED:
+                counts['Uninformed'] += 1
             elif agent.state == GossipState.SPREADER:
                 counts['Spreader'] += 1
-            elif agent.state == GossipState.STIFLER:
-                counts['Stifler'] += 1
+            elif agent.state == GossipState.DORMANT:
+                counts['Dormant'] += 1
             elif agent.state == GossipState.RESISTANT:
                 counts['Resistant'] += 1
                 
@@ -143,9 +143,9 @@ class EnhancedGossipVisualization:
         population_text = f"POPULASI SAAT INI\n"
         population_text += f"Hari: {self.model.step_count}\n"
         population_text += f"Total: {total}\n\n"
-        population_text += f"Ignorant: {counts['Ignorant']}\n"
+        population_text += f"Uninformed: {counts['Uninformed']}\n"
         population_text += f"Spreader: {counts['Spreader']}\n" 
-        population_text += f"Stifler: {counts['Stifler']}\n"
+        population_text += f"Dormant: {counts['Dormant']}\n"
         population_text += f"Resistant: {counts['Resistant']}"
         
         self.population_text.set_text(population_text)
@@ -153,9 +153,9 @@ class EnhancedGossipVisualization:
         # Text untuk persentase pada plot dinamika
         if total > 0:
             percentage_text = f"PERSENTASE:\n"
-            percentage_text += f"Ignorant: {counts['Ignorant']/total*100:.1f}%\n"
+            percentage_text += f"Uninformed: {counts['Uninformed']/total*100:.1f}%\n"
             percentage_text += f"Spreader: {counts['Spreader']/total*100:.1f}%\n"
-            percentage_text += f"Stifler: {counts['Stifler']/total*100:.1f}%\n"
+            percentage_text += f"Dormant: {counts['Dormant']/total*100:.1f}%\n"
             percentage_text += f"Resistant: {counts['Resistant']/total*100:.1f}%"
             
             self.percentage_text.set_text(percentage_text)
@@ -180,12 +180,12 @@ class EnhancedGossipVisualization:
             days = range(len(data))
             
             self.ax2.clear()
-            self.ax2.plot(days, data['Ignorant'], 'o-', color='#4A90E2', 
-                         label='Ignorant', linewidth=2, markersize=4)
+            self.ax2.plot(days, data['Uninformed'], 'o-', color='#4A90E2', 
+                         label='Uninformed', linewidth=2, markersize=4)
             self.ax2.plot(days, data['Spreader'], 's-', color='#E24A4A', 
                          label='Spreader', linewidth=2, markersize=4)
-            self.ax2.plot(days, data['Stifler'], '^-', color='#4AE24A', 
-                         label='Stifler', linewidth=2, markersize=4)
+            self.ax2.plot(days, data['Dormant'], '^-', color='#4AE24A', 
+                         label='Dormant', linewidth=2, markersize=4)
             self.ax2.plot(days, data['Resistant'], 'd-', color='#808080', 
                          label='Resistant', linewidth=2, markersize=4)
             
@@ -335,8 +335,8 @@ class EnhancedGossipVisualization:
         print(f"\nRINGKASAN POPULASI - HARI {self.model.step_count}")
         print("=" * 40)
         print(f"Total Agen: {total}")
-        print(f"Ignorant:   {counts['Ignorant']:3d} ({counts['Ignorant']/total*100:5.1f}%)")
+        print(f"Uninformed:   {counts['Uninformed']:3d} ({counts['Uninformed']/total*100:5.1f}%)")
         print(f"Spreader:   {counts['Spreader']:3d} ({counts['Spreader']/total*100:5.1f}%)")
-        print(f"Stifler:    {counts['Stifler']:3d} ({counts['Stifler']/total*100:5.1f}%)")
+        print(f"Dormant:    {counts['Dormant']:3d} ({counts['Dormant']/total*100:5.1f}%)")
         print(f"Resistant:  {counts['Resistant']:3d} ({counts['Resistant']/total*100:5.1f}%)")
         print("=" * 40)

@@ -21,7 +21,7 @@ class SimulationConfig:
     initial_spreaders: int = 5              # Number of initial spreaders
     
     # Social network parameters
-    network_type: Literal['small-world', 'scale-free'] = 'small-world'
+    network_type: Literal['small-world', 'scale-free'] = 'scale-free'
     min_social_connections: int = 3
     max_social_connections: int = 15
     

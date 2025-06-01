@@ -41,13 +41,13 @@ class GossipModel(mesa.Model):
         """Setup data collector for tracking simulation metrics"""
         self.datacollector = mesa.DataCollector(
             model_reporters={
-                "Ignorant": lambda m: self._count_agents_by_state(GossipState.IGNORANT),
+                "Uninformed": lambda m: self._count_agents_by_state(GossipState.UNINFORMED),
                 "Spreader": lambda m: self._count_agents_by_state(GossipState.SPREADER),
-                "Stifler": lambda m: self._count_agents_by_state(GossipState.STIFLER),
+                "Dormant": lambda m: self._count_agents_by_state(GossipState.DORMANT),
                 "Resistant": lambda m: self._count_agents_by_state(GossipState.RESISTANT),
                 "Total_Informed": lambda m: (
                     self._count_agents_by_state(GossipState.SPREADER) + 
-                    self._count_agents_by_state(GossipState.STIFLER)
+                    self._count_agents_by_state(GossipState.DORMANT)
                 )
             }
         )
@@ -114,13 +114,13 @@ class GossipModel(mesa.Model):
         return {
             'step': self.step_count,
             'total_agents': total_agents,
-            'ignorant': self._count_agents_by_state(GossipState.IGNORANT),
+            'uninformed': self._count_agents_by_state(GossipState.UNINFORMED),
             'spreader': self._count_agents_by_state(GossipState.SPREADER),
-            'stifler': self._count_agents_by_state(GossipState.STIFLER),
+            'dormant': self._count_agents_by_state(GossipState.DORMANT),
             'resistant': self._count_agents_by_state(GossipState.RESISTANT),
             'informed_percentage': (
                 (self._count_agents_by_state(GossipState.SPREADER) + 
-                 self._count_agents_by_state(GossipState.STIFLER)) / 
+                 self._count_agents_by_state(GossipState.DORMANT)) / 
                 (total_agents - self._count_agents_by_state(GossipState.RESISTANT)) * 100
                 if total_agents - self._count_agents_by_state(GossipState.RESISTANT) > 0 else 0
             ),

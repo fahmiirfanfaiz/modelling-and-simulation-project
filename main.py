@@ -14,9 +14,9 @@ def main():
     print("• Menampilkan data mulai dari hari ke-0")
     print("=" * 60)
     print("Keterangan warna:")
-    print("🔵 Biru = Ignorant (belum tahu gosip)")
+    print("🔵 Biru = Uninformed (belum tahu gosip)")
     print("🔴 Merah = Spreader (menyebarkan gosip)")
-    print("🟢 Hijau = Stifler (sudah bosan)")
+    print("🟢 Hijau = Dormant (sudah bosan)")
     print("⚪ Abu-abu = Resistant (kebal gosip)")
     print("=" * 60)
     

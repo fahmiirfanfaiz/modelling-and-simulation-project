@@ -15,7 +15,7 @@ class PersonAgent(mesa.Agent):
     
     def __init__(self, unique_id: int, model: 'GossipModel', is_resistant: bool = False):
         super().__init__(unique_id, model)
-        self.state = GossipState.RESISTANT if is_resistant else GossipState.IGNORANT
+        self.state = GossipState.RESISTANT if is_resistant else GossipState.UNINFORMED
         self.days_spreading = 0
         self.max_spread_days = np.random.randint(
             model.config.min_spread_days, 
@@ -36,7 +36,7 @@ class PersonAgent(mesa.Agent):
         if self.state == GossipState.SPREADER:
             self._spread_gossip()
             self._update_spreading_days()
-        elif self.state == GossipState.IGNORANT:
+        elif self.state == GossipState.UNINFORMED:
             self._listen_for_gossip()
     
     def _spread_gossip(self) -> None:
@@ -51,23 +51,23 @@ class PersonAgent(mesa.Agent):
         )
         
         for neighbor in neighbors:
-            if neighbor.state == GossipState.IGNORANT:
+            if neighbor.state == GossipState.UNINFORMED:
                 if self.random.random() < self.model.config.spread_probability:
                     neighbor.hear_gossip()
     
     def _spread_gossip_global(self) -> None:
         """Menyebarkan gosip melalui koneksi sosial"""
         for connection in self.social_connections:
-            if connection.state == GossipState.IGNORANT:
+            if connection.state == GossipState.UNINFORMED:
                 if self.random.random() < self.communication_probability:
                     if self.random.random() < self.model.config.global_spread_probability:
                         connection.hear_gossip()
     
     def _update_spreading_days(self) -> None:
-        """Update days spreading and transition to stifler if needed"""
+        """Update days spreading and transition to dormant if needed"""
         self.days_spreading += 1
         if self.days_spreading >= self.max_spread_days:
-            self.state = GossipState.STIFLER
+            self.state = GossipState.DORMANT
     
     def _listen_for_gossip(self) -> None:
         """Mendengarkan gosip dari tetangga dan koneksi sosial"""
@@ -76,7 +76,7 @@ class PersonAgent(mesa.Agent):
     
     def hear_gossip(self) -> None:
         """Mendengar gosip dan mungkin mulai menyebar"""
-        if self.state == GossipState.IGNORANT:
+        if self.state == GossipState.UNINFORMED:
             if self.random.random() < self.model.config.believe_probability:
                 self.state = GossipState.SPREADER
                 self.days_spreading = 0
